@@ -1,30 +1,38 @@
 import React, { useState, useEffect } from "react";
+import NewsCard from "../NewsCard/NewsCard";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
+import "./HackerNews.css";
+import moment from "moment";
 
 const HackerNews = () => {
   const [news, setNews] = useState([]);
-  const [favorites, setFavourites] = useState([]);
+  const [favoritesArr, setFavouritesArr] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [pagecount, setPagecount] = useState(0);
-  const [currentpage, setCurrentpage] = useState(1);
-  const [postperpage, setPostperpage] = useState(8);
+  const [pagecount, setPagecount] = useState(1);
+  const [currentpage, setCurrentpage] = useState(0);
   const [library, Setlibrary] = useState("reactjs");
 
+  let now = moment();
   let limit = 9;
+  let URL = `https://hn.algolia.com/api/v1/search_by_date?query=${library}&page=${currentpage}`;
 
   useEffect(() => {
     const getNews = async () => {
       setLoading(true);
       await axios
-        .get(
-          `https://hn.algolia.com/api/v1/search_by_date?query=${library}&page=${currentpage}`
-        )
+        .get(URL)
         .then((response) => {
           console.log("La api es: ", response.data.hits);
-          const total = response.data.length;
+          const total = response.data.hits.length;
+          console.log("Total es: ", total);
           setPagecount(Math.ceil(total / limit));
+          console.log(response.data.hits);
+          console.log("(antes) SetNews es: ", news);
           setNews(response.data.hits);
+          console.log("(despues) SetNews es: ", news);
+          console.log("La URL es: ", URL);
+          return news;
         })
         .catch((e) => {
           console.log(e);
@@ -35,10 +43,10 @@ const HackerNews = () => {
     getNews();
   }, [limit]);
 
-  const fetchComments = async (currentPage) => {
+  const fetchComments = async (library, currentPage) => {
     await axios
       .get(
-        `https://hn.algolia.com/api/v1/search_by_date?query=${library}&page=${currentpage}`
+        `https://hn.algolia.com/api/v1/search_by_date?query=${library}&page=${currentPage}`
       )
       .then((res) => {
         const data = res.json();
@@ -49,23 +57,31 @@ const HackerNews = () => {
       });
   };
 
+  const addFave = (fave) => {
+    setFavouritesArr(prev => [...prev, fave])
+  }
+
+  useEffect(() => {
+    axios.get(URL);
+  }, [library]);
+
   const handleClickPage = async (data) => {
+    console.log("Data is", data);
     console.log(data.selected);
     let currentPage = data.selected + 1;
-    const newsFromServer = await fetchComments(currentPage);
+    const newsFromServer = await fetchComments(library, currentPage);
     setNews(newsFromServer);
   };
 
-  const handleOptions = (e) =>{
-    Setlibrary(e.target.value)
-  }
 
   return (
-    <div className="container">
-      <div className="select-bar">
-        <select 
-        value={library}
-        onChange={(e) =>{Setlibrary(e.target.value)}}
+    <div className="Front-End-Test---Home-view">
+      <div className="Rectangle-26-Copy-23">
+        <select
+          value={library}
+          onChange={(e) => {
+            Setlibrary(e.target.value);
+          }}
         >
           {console.log(library)}
           <option value="reactjs">React</option>
@@ -76,35 +92,33 @@ const HackerNews = () => {
       <div>
         {news.map((item) => {
           return (
-            <div key={item.objectID} className="col-sm-6 col-md-4 v my-2">
-              <div className="card shadow-sm w-100" style={{ minHeight: 225 }}>
-                <div className="card-body">
-                  <h4 className="card-subtitle mb-2 text-muted text-center">
-                    {item.story_title}
-                  </h4>
-                </div>
-              </div>
+            <div className="Rectangle" key={item.objectID}>
+              <a href={item.url}>
+                <span className="-hours-ago-by-autho">
+                  {now.diff(item.created_at, "days")} days ago by {item.author}
+                </span>
+                <br />
+                <span className="Yes-React-is-taking">
+                  {item.story_title}
+                </span>
+                <button onClick={() => addFave(item)} type="button">añadir</button>
+                {console.log("Los favoritos son: ",favoritesArr)}
+              </a>
             </div>
           );
         })}
       </div>
       <ReactPaginate
-        previousLabel={"previous"}
-        nextLabel={"next"}
-        breakLabel={"..."}
         pageCount={pagecount}
+        pageRange={6}
         marginPagesDisplayed={2}
-        pageRangeDisplayed={3}
         onPageChange={handleClickPage}
-        containerClassName={"pagination justify-content-center"}
-        pageClassName={"page-item"}
-        pageLinkClassName={"page-link"}
-        previousClassName={"page-item"}
-        previousLinkClassName={"page-link"}
-        nextClassName={"page-item"}
-        nextLinkClassName={"page-link"}
-        breakClassName={"page-item"}
-        breakLinkClassName={"page-link"}
+        containerClassName={"container"}
+        previousLinkClassName={"page"}
+        breakClassName={"page"}
+        nextLinkClassName={"page"}
+        pageClassName={"page"}
+        disabledClassName={"disabled"}
         activeClassName={"active"}
       />
     </div>
