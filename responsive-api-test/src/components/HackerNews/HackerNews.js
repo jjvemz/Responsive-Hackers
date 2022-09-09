@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import NewsCard from "../NewsCard/NewsCard";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
-import {useNavigate } from 'react-router-dom'
 
 import {IoIosHeart, IoIosHeartEmpty} from 'react-icons/io'
 import "./HackerNews.css";
@@ -14,6 +13,7 @@ const HackerNews = () => {
   const [loading, setLoading] = useState(false);
   const [pagecount, setPagecount] = useState(1);
   const [currentpage, setCurrentpage] = useState(0);
+  const [itemPerPage, SetItemPerPage] = useState([...news].splice(0,8))
   const [library, Setlibrary] = useState("reactjs");
 
   let now = moment();
@@ -31,6 +31,7 @@ const HackerNews = () => {
           console.log(response.data.hits);
           setNews(response.data.hits);
           console.log("La URL es: ", URL);
+          console.log("hola mundo");
           return news;
         })
         .catch((e) => {
@@ -40,7 +41,7 @@ const HackerNews = () => {
       setLoading(false);
     };
     getNews();
-  }, [limit]);
+  }, [limit, news, URL]);
   console.log("El cambio de URL es: ", URL);
   const fetchComments = async (library, currentPage) => {
     await axios
@@ -73,7 +74,7 @@ const HackerNews = () => {
 
   useEffect(() => {
     axios.get(URL);
-  }, []);
+  });
 
   const handleClickPage = async (data) => {
     console.log("Data is", data);
@@ -127,18 +128,20 @@ const HackerNews = () => {
         })}
       </div>
       <ReactPaginate
-        pageCount={pagecount}
-        pageRange={6}
-        marginPagesDisplayed={2}
-        onPageChange={handleClickPage}
-        containerClassName={"container"}
-        previousLinkClassName={"page"}
-        breakClassName={"page"}
-        nextLinkClassName={"page"}
-        pageClassName={"page"}
-        disabledClassName={"disabled"}
-        activeClassName={"active"}
-      />
+
+					pageCount={10}
+					pageRange={2}
+					marginPagesDisplayed={2}
+					onPageChange={handleClickPage}
+					containerClassName={'container'}
+					previousLinkClassName={'page'}
+					breakClassName={'page'}
+					nextLinkClassName={'page'}
+					pageClassName={'page'}
+					disabledClassNae={'disabled'}
+					activeClassName={'active'}
+
+				/>
     </div>
   );
 };
