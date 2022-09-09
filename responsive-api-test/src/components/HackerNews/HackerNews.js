@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import NewsCard from "../NewsCard/NewsCard";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
+import {useNavigate } from 'react-router-dom'
+
+import {IoIosHeart, IoIosHeartEmpty} from 'react-icons/io'
 import "./HackerNews.css";
 import moment from "moment";
 
@@ -23,14 +26,10 @@ const HackerNews = () => {
       await axios
         .get(URL)
         .then((response) => {
-          console.log("La api es: ", response.data.hits);
           const total = response.data.hits.length;
-          console.log("Total es: ", total);
           setPagecount(Math.ceil(total / limit));
           console.log(response.data.hits);
-          console.log("(antes) SetNews es: ", news);
           setNews(response.data.hits);
-          console.log("(despues) SetNews es: ", news);
           console.log("La URL es: ", URL);
           return news;
         })
@@ -42,7 +41,7 @@ const HackerNews = () => {
     };
     getNews();
   }, [limit]);
-
+  console.log("El cambio de URL es: ", URL);
   const fetchComments = async (library, currentPage) => {
     await axios
       .get(
@@ -57,13 +56,24 @@ const HackerNews = () => {
       });
   };
 
-  const addFave = (fave) => {
-    setFavouritesArr(prev => [...prev, fave])
+  const addFave = (props) => {
+    let array = favoritesArr;
+    let addArray = true;
+    array.map((item, key) =>{
+      if (item === props.i){
+        array.splice(key, 1);
+        addArray= false;
+      }
+    });
+    if(addArray){
+      array.push(props.i)
+    }
+    setFavouritesArr([...array])
   }
 
   useEffect(() => {
     axios.get(URL);
-  }, [library]);
+  }, []);
 
   const handleClickPage = async (data) => {
     console.log("Data is", data);
@@ -91,19 +101,27 @@ const HackerNews = () => {
       </div>
       <div>
         {news.map((item) => {
+          
           return (
             <div className="Rectangle" key={item.objectID}>
-              <a href={item.url}>
+              <a href={item.story_url}>
                 <span className="-hours-ago-by-autho">
-                  {now.diff(item.created_at, "days")} days ago by {item.author}
+                  {now.diff(item.created_at, "hours")} days ago by {item.author}
                 </span>
                 <br />
                 <span className="Yes-React-is-taking">
                   {item.story_title}
                 </span>
-                <button onClick={() => addFave(item)} type="button">añadir</button>
-                {console.log("Los favoritos son: ",favoritesArr)}
-              </a>
+                </a>
+                {favoritesArr.includes(item) ?(
+                  <IoIosHeart 
+                    onClick={()=> addFave({item, })}
+                  />
+                ):(
+                  <IoIosHeartEmpty 
+                  onClick={()=> addFave({item, })}
+                  /> 
+                )}
             </div>
           );
         })}

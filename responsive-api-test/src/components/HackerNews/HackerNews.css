@@ -114,17 +114,7 @@
   color: var(--brownish-grey);
 }
 
- 
-.favourite-rectangle{
-  width: 4.25rem;
-  height: 5.625rem;
-  margin: 0 0 0 1rem;
-  padding: 2.188rem 1.375rem 2.063rem;
-  opacity: 0.06;
-  border-radius: 6px;
-  border: solid 1px #606060;
-  background-color: #606060;
-}
+
 
 .dropdown {
   width: 15rem;

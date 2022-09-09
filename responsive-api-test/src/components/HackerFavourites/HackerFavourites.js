@@ -7,6 +7,7 @@ export default function HackerFavourites(props){
     
     return(
         <div className="div">
+            <h1>Hola</h1>
             {props.map((item) =>{
                 return(
                     <div className="Rectangle" key={item.objectID}>
