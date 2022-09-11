@@ -6,8 +6,8 @@ import HackerNews from'../../assets/hacker-news.svg'
 const RectangleTitle = () =>{
     return(
         <div className="Rectangle-2-Copy">
-            <span className="HACKER-NEWS Text-Style">
-                <img src={HackerNews} alt="Hacker News"/>
+            <span className="HACKER-NEWS">
+                <img src={HackerNews} alt="HACKER-NEWS" className="HACKER-NEWS"/>
             </span>
         </div>
     );

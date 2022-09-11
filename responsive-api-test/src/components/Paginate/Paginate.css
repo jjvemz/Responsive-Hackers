@@ -1,0 +1,14 @@
+.root{
+    display: flex;
+    justify-content: center;
+    bottom: 0;
+    z-index: 200;
+    
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: wheat;
+}
