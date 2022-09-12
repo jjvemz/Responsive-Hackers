@@ -65,7 +65,7 @@ const HackerNews = () => {
             <Grid container spacing={2} columns={2} key={item.objectID}>
               <Grid item xs={8} >
                 <div className="Rectangle" >
-                  <a href={item.story_url}>
+                  <a href={item.story_url} target="_blank" rel="noreferrer noopener">
                     <span className="-hours-ago-by-autho">
                       <img src={TimeIcon} alt="TimeIcon"/>{now.diff(item.created_at, "weeks")} days ago by{" "}
                       {item.author}

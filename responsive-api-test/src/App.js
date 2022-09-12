@@ -8,7 +8,10 @@ import NavBar from "./components/NavBar/NavBar";
 function App() {
   return (
     <div className="app">
-      <RectangleTitle />
+      <div className="title">
+        <RectangleTitle />
+        </div>
+      
       <div>
         <NavBar />
         <Router>

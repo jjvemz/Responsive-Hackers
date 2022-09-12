@@ -28,16 +28,21 @@ export default function HackerFavourites(){
         return data;
     };
 
+    const openTab = (URL) =>{
+        
+    }
+
     useEffect(() =>{
         setData([...getData()]);
         console.log("data in the columns is: ",data); 
     }, []);
+
     return(
         <div className="div">
             {data.filter(item => faves.includes(item.objectID)).map((item) =>{
                 return(
                     <div className="Rectangle" key={item.objectID}>
-                        <a href={item.url}>
+                        <a href={item.url} target="_blank" rel="noreferrer noopener">
                         <span className="-hours-ago-by-autho">
                             {now.diff(item.created_at, "days")} days ago by {item.author}
                         </span>
